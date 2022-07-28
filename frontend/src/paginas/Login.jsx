@@ -35,11 +35,11 @@ const Login = () => {
 
             <nav className={'lg:flex lg:justify-between'}>
                 <Link
-                    className={'block text-center my-1 text-slate-500 uppercase text-sm'}
+                    className={'block text-center text-slate-500 uppercase text-sm'}
                     to={'/registrar'}
                 >Registrar</Link>
                 <Link
-                    className={'block text-center my-1 text-slate-500 uppercase text-sm'}
+                    className={'block text-center text-slate-500 uppercase text-sm'}
                     to={'/olvide-password'}
                 >Olvide Mi Password</Link>
             </nav>
