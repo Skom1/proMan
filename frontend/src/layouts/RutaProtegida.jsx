@@ -9,7 +9,6 @@ const RutaProtegida = () => {
     const { auth, cargando } = useAuth();
 
     if(cargando) return 'Cargando'
-    console.log(auth);
 
     return (
         <>

@@ -8,10 +8,34 @@ const ProyectosContext = createContext();
 
 const ProyectosProvider = ({children}) => {
 
-    const [proyectos, useProyectos] = useState([]);
+    const [proyectos, setProyectos] = useState([]);
     const [alerta , setAlerta] = useState([]);
+    const [proyecto, setProyecto] = useState({});
+
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const obtenerProyectos = async () => {
+            try {
+                const token = localStorage.getItem('token')
+                if(!token) return
+
+                const config = {
+                    headers: {
+                        'Contente-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+
+                const { data } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos`, config)
+                setProyectos(data)
+            } catch (e) {
+                console.log(e);
+            }
+        }
+        obtenerProyectos()
+    }, [])
 
     const mostrarAlerta = alerta => {
         setAlerta(alerta)
@@ -33,8 +57,8 @@ const ProyectosProvider = ({children}) => {
                 }
             }
 
-            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos`, proyecto, config)
-            console.log(data)
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos`, proyecto, config);
+            setProyectos([...proyectos, data])
             setAlerta({
                 msg: 'Proyecto Creado Correctamente',
                 error: false
@@ -48,6 +72,26 @@ const ProyectosProvider = ({children}) => {
         }
     }
 
+    const obtenerProyecto = async id => {
+        try{
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    'Contente-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const data = await axios(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos/${id}`, config )
+            setProyecto(data.data);
+            console.log(data.data);
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
 
     return(
         <ProyectosContext.Provider
@@ -55,7 +99,9 @@ const ProyectosProvider = ({children}) => {
                 proyectos,
                 mostrarAlerta,
                 alerta,
-                submitProyecto
+                submitProyecto,
+                obtenerProyecto,
+                proyecto
             }}
         >
             {children}
