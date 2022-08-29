@@ -23,13 +23,19 @@ const proyectosSchema = mongoose.Schema({
     creador: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Usuario',
-        colaboradores: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Usuario',
-            },
-        ],
     },
+    tareas: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Tarea',
+        }
+    ],
+    colaboradores: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Usuario',
+        },
+    ],
 }, {
     timestamps: true,
     });

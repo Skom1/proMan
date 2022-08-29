@@ -1,23 +1,27 @@
 import Proyecto from "../models/Proyecto.js";
 import Tarea from "../models/Tarea.js";
-import proyecto from "../models/Proyecto.js";
 
 const agregarTarea = async (req, res) => { // POST
     const { proyecto } = req.body;
     const existeProyecto = await Proyecto.findById(proyecto);
 
-    if(!existeProyecto){
+    if( !existeProyecto ){
         const error = new Error('El Proyecto No Existe')
         return res.status(404).json({ msg: error.message })
     }
 
-    if(existeProyecto.creador.toString() !== req.usuario._id.toString()){
+    if( existeProyecto.creador.toString() !== req.usuario._id.toString() ){
         const error = new Error('No Tienes Los Permisos Para Anadir Tareas')
         return res.status(403).json({ msg: error.message })
     }
 
     try {
         const tareaAlmacenada = await Tarea.create(req.body);
+        // Almacenar ID en el proyecto
+        existeProyecto.tareas.push(tareaAlmacenada._id);
+        console.log(tareaAlmacenada._id)
+        console.log(existeProyecto)
+        await existeProyecto.save()
         res.json(tareaAlmacenada)
     } catch (e) {
         console.log(e)

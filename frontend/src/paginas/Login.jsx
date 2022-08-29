@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Error from "../components/Error";
 import useAuth from "../hooks/useAuth";
 import axios from "axios";
@@ -11,6 +11,8 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState({})
     const { setAuth} = useAuth();
+
+    const navigate = useNavigate();
 
     const handleSubmit = async e => {
         e.preventDefault();
@@ -29,6 +31,7 @@ const Login = () => {
             setError({})
             localStorage.setItem('token', data.token);
             setAuth(data);
+            navigate('/proyectos')
         } catch (e) {
             setError({
                 msg: e.response.data.msg,

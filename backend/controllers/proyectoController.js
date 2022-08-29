@@ -2,7 +2,10 @@ import Proyecto from "../models/Proyecto.js";
 
 const obtenerProyectos = async (req, res) => { // GET
     // const proyectos = await Proyecto.find() Sirve para traer todos los proyectos
-    const proyectos = await Proyecto.find().where('creado').equals(req.usuario) // Proyectos de un usuario
+    const proyectos = await Proyecto.find()
+        .where('creado')
+        .equals(req.usuario)
+        .select('-tareas') // Proyectos de un usuario
     res.json(proyectos);
 };
 
@@ -20,7 +23,7 @@ const nuevoProyecto = async (req, res) => { // POST
 
 const obtenerProyecto = async (req, res) => { // GET
     const { id } = req.params // acceder al routing dinamico
-    const proyecto = await Proyecto.findById(id)
+    const proyecto = await Proyecto.findById(id).populate('tareas');
 
     if( !proyecto ){
         const error = new Error("No Encontrado")

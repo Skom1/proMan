@@ -11,6 +11,7 @@ const ProyectosProvider = ({children}) => {
     const [proyectos, setProyectos] = useState([]);
     const [alerta , setAlerta] = useState([]);
     const [proyecto, setProyecto] = useState({});
+    const [modalForm, setModalForm] =useState(false)
 
 
     const navigate = useNavigate();
@@ -168,6 +169,28 @@ const ProyectosProvider = ({children}) => {
         }
     }
 
+    const handleModalForm = () => {
+        setModalForm(!modalForm)
+    }
+
+    const submitTarea = async tarea => {
+        try {
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    'Contente-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/tareas`, tarea, config)
+            console.log(data)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return(
         <ProyectosContext.Provider
@@ -178,7 +201,10 @@ const ProyectosProvider = ({children}) => {
                 submitProyecto,
                 obtenerProyecto,
                 proyecto,
-                eliminarProyecto
+                eliminarProyecto,
+                modalForm,
+                handleModalForm,
+                submitTarea
             }}
         >
             {children}
