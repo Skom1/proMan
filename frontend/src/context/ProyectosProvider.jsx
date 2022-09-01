@@ -2,6 +2,7 @@ import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import React from 'react';
 import axios from "axios";
+import error from "../components/Error.jsx";
 
 
 const ProyectosContext = createContext();
@@ -11,7 +12,10 @@ const ProyectosProvider = ({children}) => {
     const [proyectos, setProyectos] = useState([]);
     const [alerta , setAlerta] = useState([]);
     const [proyecto, setProyecto] = useState({});
-    const [modalForm, setModalForm] =useState(false)
+    const [modalForm, setModalForm] = useState(false)
+    const [tarea, setTarea] = useState({})
+    const [modalEliminar, setModalEliminar] = useState(false)
+    const [colaborador, setColaborador] = useState({})
 
 
     const navigate = useNavigate();
@@ -133,7 +137,10 @@ const ProyectosProvider = ({children}) => {
             setProyecto(data.data);
             console.log(data.data);
         } catch (e) {
-            console.log(e)
+            setAlerta({
+                msg: error.response.data.msg,
+                error: true
+            })
         }
     }
 
@@ -171,9 +178,19 @@ const ProyectosProvider = ({children}) => {
 
     const handleModalForm = () => {
         setModalForm(!modalForm)
+        setTarea({})
     }
 
     const submitTarea = async tarea => {
+
+        if(tarea?.id) {
+            await editarTarea(tarea);
+        } else {
+            await crearTarea(tarea)
+        }
+    }
+
+    const crearTarea = async tarea => {
         try {
             const token = localStorage.getItem('token')
             if(!token) return
@@ -186,9 +203,144 @@ const ProyectosProvider = ({children}) => {
             }
 
             const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/tareas`, tarea, config)
-            console.log(data)
+            // Agrega la tarea al state
+            const proyectoActualizado = { ...proyecto };
+            proyectoActualizado.tareas = [...proyecto.tareas, data];
+
+            setProyecto(proyectoActualizado)
+            setAlerta({})
+            setModalForm(false)
+
         } catch (e) {
             console.log(e)
+        }
+    }
+
+    const editarTarea = async tarea => {
+        try{
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    'Contente-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await axios.put(`${import.meta.env.VITE_BACKEND_URL}/api/tareas/${tarea.id}`, tarea, config)
+
+            //TODO: Actualizar el DOM
+            const proyectoActualizado = {...proyecto}
+            proyectoActualizado.tareas = proyectoActualizado.tareas.map( tareaState =>
+                tareaState._id === data._id ? data : tareaState )
+            setProyecto(proyectoActualizado)
+
+            setAlerta({})
+            setModalForm(false)
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const handleModalEditar = tarea => {
+        setTarea(tarea)
+        setModalForm(true)
+    }
+
+    const handleModalEliminar = tarea => {
+        setTarea(tarea)
+        setModalEliminar(!modalEliminar)
+    }
+
+    const eliminarTarea = async () => {
+        try{
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    'Contente-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/tareas/${tarea._id}`, config)
+            setAlerta({
+                msg: data.msg,
+                error: false
+            })
+            //TODO: Actualizar el DOM
+            const proyectoActualizado = {...proyecto}
+            proyectoActualizado.tareas = proyectoActualizado.tareas.filter(tareaState =>
+            tareaState._id !== tarea._id)
+
+
+            setProyecto(proyectoActualizado)
+            setModalEliminar(false)
+            setTarea({})
+            setTimeout(() => {
+                setAlerta({})
+            }, 1000)
+        } catch (e){
+            console.log(e)
+        }
+    }
+
+    const submitColaborador = async email => {
+
+        try {
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    'Contente-Type': 'application/json',
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos/colaboradores`, { email }, config)
+            setColaborador(data)
+            setAlerta({})
+        } catch (e){
+            setAlerta({
+                msg: e.response.data.msg,
+                error: true
+            })
+        }
+    }
+
+    const agregarColaborador = async email => {
+
+        try {
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos/colaboradores/${proyecto._id}`, email, config)
+
+            setAlerta({
+                msg: data.msg,
+                error: false
+            })
+            setColaborador({})
+
+            setTimeout(() => {
+                setAlerta({})
+            }, 3000);
+
+        } catch (e) {
+            setAlerta({
+                msg: e.response.data.msg,
+                error: true
+            })
         }
     }
 
@@ -204,7 +356,15 @@ const ProyectosProvider = ({children}) => {
                 eliminarProyecto,
                 modalForm,
                 handleModalForm,
-                submitTarea
+                submitTarea,
+                handleModalEditar,
+                tarea,
+                modalEliminar,
+                handleModalEliminar,
+                eliminarTarea,
+                submitColaborador,
+                colaborador,
+                agregarColaborador
             }}
         >
             {children}

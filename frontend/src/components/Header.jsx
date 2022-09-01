@@ -11,7 +11,7 @@ const Header = () => {
                 <input
                     type={'search'}
                     placeholder={'Buscar Proyectos'}
-                    className={'rounded-lg lg:w-96 block p-2 border-2 border-gray-400'}
+                    className={'rounded-lg lg:w-7/12 block p-2 border-2 border-gray-400'}
                 />
                 <div className={'flex items-center gap-4'}>
                     <Link

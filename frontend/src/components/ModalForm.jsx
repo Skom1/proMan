@@ -8,6 +8,7 @@ const PRIORIDAD = ['Baja', 'Media', 'Alta']
 
 const ModalFormularioTarea = () => {
 
+    const [id, setId] = useState('')
     const [nombre, setNombre] = useState('')
     const [descripcion, setDescripcion] = useState('')
     const [prioridad, setPrioridad] = useState('')
@@ -15,9 +16,26 @@ const ModalFormularioTarea = () => {
 
     const params = useParams()
 
-    const { modalForm, handleModalForm, mostrarAlerta, alerta, submitTarea } = useProyectos()
+    const { modalForm, handleModalForm, mostrarAlerta, alerta, submitTarea, tarea } = useProyectos()
 
-    const handleSubmit = e => {
+    useEffect(() => {
+        if(tarea?._id){
+            setId(tarea._id)
+            setNombre(tarea.nombre)
+            setDescripcion(tarea.descripcion)
+            setFechaEntrega(tarea.fecha?.split('T')[0])
+            setPrioridad(tarea.prioridad)
+            return
+        } else{
+            setId('')
+            setNombre('')
+            setDescripcion('')
+            setFechaEntrega('')
+            setPrioridad('')
+        }
+    }, [tarea])
+
+    const handleSubmit = async e => {
         e.preventDefault()
 
         if([nombre, descripcion, fechaEntrega, prioridad].includes('')){
@@ -28,7 +46,14 @@ const ModalFormularioTarea = () => {
             return
         }
 
-        submitTarea({ nombre, descripcion, fechaEntrega, prioridad, proyecto: params.id })
+        await submitTarea({ id, nombre, descripcion, fechaEntrega, prioridad, proyecto: params.id })
+
+        setId('')
+        setNombre('')
+        setDescripcion('')
+        setFechaEntrega('')
+        setPrioridad('')
+
     }
 
     const { msg } = alerta
@@ -85,7 +110,7 @@ const ModalFormularioTarea = () => {
                             <div className="sm:flex sm:items-start">
                                 <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                                     <Dialog.Title as="h3" className="text-3xl leading-6 font-bold text-gray-900">
-                                        Crear Tarea
+                                        { id ? 'Editar Tarea' : 'Crear Tarea' }
                                     </Dialog.Title>
                                     {msg && <Error alerta={alerta}/>}
                                     <form
@@ -161,7 +186,7 @@ const ModalFormularioTarea = () => {
                                         <input
                                             type={'submit'}
                                             className={'bg-sky-600 hover:bg-sky-700 w-full p-3 text-white uppercase font-bold cursor-pointer transition-colors rounded text-sm'}
-                                            value={'Crear Tarea'}
+                                            value={ id ? 'Editar Tarea' : 'Crear Tarea'}
                                         />
                                     </form>
                                 </div>

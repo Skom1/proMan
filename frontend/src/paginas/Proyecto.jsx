@@ -1,16 +1,15 @@
-import React from 'react';
-import { useEffect, useState } from "react";
+import React, { useEffect } from 'react';
 import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import ModalForm from "../components/ModalForm";
+import ModalEliminar from "../components/ModalEliminar";
 import Tarea from "../components/Tarea";
+import Error from "../components/Error";
 
 const Proyecto = () => {
 
     const params = useParams();
-    const { obtenerProyecto, proyecto, handleModalForm } = useProyectos();
-
-    const [modal, setModal] = useState(false)
+    const { obtenerProyecto, proyecto, handleModalForm, alerta } = useProyectos();
 
     useEffect(() => {
         obtenerProyecto(params.id)
@@ -18,7 +17,7 @@ const Proyecto = () => {
 
     const { nombre } = proyecto
 
-
+    const { msg } = alerta
 
     return (
         <>
@@ -50,6 +49,7 @@ const Proyecto = () => {
 
             <p className='font-bold text-xl mt-10'>Tareas del Proyecto</p>
 
+            {msg && <Error alerta={alerta} />}
 
             <div className='bg-white shadow mt-10 rounded-lg'>
                 {proyecto.tareas?.length ?
@@ -61,10 +61,17 @@ const Proyecto = () => {
                     )) :
                     <p className='text-center my-5 p-10'>No hay tareas en este proyecto</p>}
             </div>
-            <ModalForm
-                modal={modal}
-                setModal={setModal}
-            />
+
+            <div className={'flex items-center justify-between mt-10'}>
+                <p className='font-bold text-xl'>Colaboradores</p>
+                <Link
+                    to={`/proyectos/nuevo-colaborador/${proyecto._id}`}
+                    className={'text-gray-400 uppercase hover:text-black font-bold'}
+                >Agregar</Link>
+            </div>
+
+            <ModalForm />
+            <ModalEliminar />
         </>
     );
 };
