@@ -4,9 +4,12 @@ import Usuario from "../models/Usuario.js";
 
 const obtenerProyectos = async (req, res) => { // GET
     // const proyectos = await Proyecto.find() Sirve para traer todos los proyectos
-    const proyectos = await Proyecto.find()
-        .where('creado')
-        .equals(req.usuario)
+    const proyectos = await Proyecto.find({
+        $or: [
+            {'colaboradores': { $in: req.usuario}},
+            {'creador': { $in: req.usuario}},
+        ]
+    })
         .select('-tareas') // Proyectos de un usuario
     res.json(proyectos);
 };
@@ -25,7 +28,7 @@ const nuevoProyecto = async (req, res) => { // POST
 
 const obtenerProyecto = async (req, res) => { // GET
     const { id } = req.params // acceder al routing dinamico
-    const proyecto = await Proyecto.findById(id).populate('tareas');
+    const proyecto = await Proyecto.findById(id).populate('tareas').populate('colaboradores', 'nombre email');
 
     if( !proyecto ){
         const error = new Error("No Encontrado")
@@ -33,7 +36,10 @@ const obtenerProyecto = async (req, res) => { // GET
     }
 
     // Quien intenta acceder al proyecto es quien lo creo o quien tiene los permisos
-    if( proyecto.creador.toString() !== req.usuario._id.toString() ){
+    if( proyecto.creador.toString() !== req.usuario._id.toString() &&
+        !proyecto.colaboradores.some( (colaborador) =>
+        colaborador._id.toString() === req.usuario._id.toString()
+        )){
         const error = new Error("Accion No Valida")
         return res.status(401).json({ msg: error.message })
     }
@@ -150,9 +156,23 @@ const agregarColaborador = async (req, res) => {
 };
 
 const eliminarColaborador = async (req, res) => {
+    const proyecto = await Proyecto.findById(req.params.id);
 
+    if (!proyecto) {
+        const error = new Error("Proyecto No Encontrado");
+        return res.status(404).json({ msg: error.message });
+    }
+
+    if (proyecto.creador.toString() !== req.usuario._id.toString()) {
+        const error = new Error("Acción no válida");
+        return res.status(404).json({ msg: error.message });
+    }
+
+    // Esta bien, se puede eliminar
+    proyecto.colaboradores.pull(req.body.id);
+    await proyecto.save();
+    res.json({ msg: "Colaborador Eliminado Correctamente" });
 };
-
 
 export {
     obtenerProyectos,

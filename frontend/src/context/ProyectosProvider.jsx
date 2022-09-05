@@ -16,6 +16,7 @@ const ProyectosProvider = ({children}) => {
     const [tarea, setTarea] = useState({})
     const [modalEliminar, setModalEliminar] = useState(false)
     const [colaborador, setColaborador] = useState({})
+    const [modalEliminarColaborador, setModalEliminarColaborador] = useState(false)
 
 
     const navigate = useNavigate();
@@ -135,12 +136,16 @@ const ProyectosProvider = ({children}) => {
 
             const data = await axios(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos/${id}`, config )
             setProyecto(data.data);
-            console.log(data.data);
+            setAlerta({})
         } catch (e) {
+            navigate('/proyectos')
             setAlerta({
-                msg: error.response.data.msg,
+                msg: e.response.data.msg,
                 error: true
             })
+            setTimeout(() => {
+                setAlerta({})
+            }, 1000)
         }
     }
 
@@ -271,7 +276,7 @@ const ProyectosProvider = ({children}) => {
                 msg: data.msg,
                 error: false
             })
-            //TODO: Actualizar el DOM
+
             const proyectoActualizado = {...proyecto}
             proyectoActualizado.tareas = proyectoActualizado.tareas.filter(tareaState =>
             tareaState._id !== tarea._id)
@@ -334,13 +339,78 @@ const ProyectosProvider = ({children}) => {
 
             setTimeout(() => {
                 setAlerta({})
-            }, 3000);
+            }, 1000);
 
         } catch (e) {
             setAlerta({
                 msg: e.response.data.msg,
                 error: true
             })
+        }
+    }
+
+    const handleModalEliminarColaborador = (colaborador) => {
+        setModalEliminarColaborador(!modalEliminarColaborador)
+        setColaborador(colaborador)
+    }
+
+    const eliminarColaborador = async () => {
+        try {
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/proyectos/eliminar-colaborador/${proyecto._id}`, { id: colaborador._id }, config)
+
+            const proyectoActualizado = {...proyecto}
+
+            proyectoActualizado.colaboradores = proyectoActualizado.colaboradores.filter(colaboradorState => colaboradorState._id !== colaborador._id )
+
+            setProyecto(proyectoActualizado)
+            setAlerta({
+                msg: data.msg,
+                error: false
+            })
+            setColaborador({})
+            setModalEliminarColaborador(false)
+
+            setTimeout(() => {
+                setAlerta({})
+            }, 3000);
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    const completarTarea = async id => {
+        try {
+            const token = localStorage.getItem('token')
+            if(!token) return
+
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                }
+            }
+
+            const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/tareas/estado/${id}`, {}, config)
+
+            const proyectoActualizado = {...proyecto}
+            proyectoActualizado.tareas = proyectoActualizado.tareas.map(tareaState =>
+            tareaState._id === data._id ? data : tareaState)
+            setProyecto(proyectoActualizado)
+            setTarea({})
+            setAlerta({})
+
+        } catch (e) {
+            console.log(e)
         }
     }
 
@@ -364,7 +434,11 @@ const ProyectosProvider = ({children}) => {
                 eliminarTarea,
                 submitColaborador,
                 colaborador,
-                agregarColaborador
+                agregarColaborador,
+                handleModalEliminarColaborador,
+                modalEliminarColaborador,
+                eliminarColaborador,
+                completarTarea
             }}
         >
             {children}
