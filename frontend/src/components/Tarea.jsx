@@ -14,11 +14,12 @@ const Tarea = ({ tarea }) => {
 
     return (
         <div className={'border-b p-5 flex justify-between items-center'}>
-            <div>
+            <div className={'flex flex-col items-start'}>
                 <p className="mb-1 text-xl font-bold">{nombre}</p>
                 <p className="mb-1 text-sm text-gray-500 uppercase">{descripcion}</p>
                 <p className="mb-1 text-xl font-bold">{ formatearFecha(fecha) }</p>
                 <p className="mb-1 text-gray-600">Prioridad: {prioridad}</p>
+                { estado && <p className={'text-xs bg-green-600 uppercase rounded-lg text-white p-1'}>Completada Por: {tarea.completado.nombre}</p>}
             </div>
             <div
                 className="flex flex-col lg:flex-row gap-2"

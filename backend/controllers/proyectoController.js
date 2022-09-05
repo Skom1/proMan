@@ -28,7 +28,8 @@ const nuevoProyecto = async (req, res) => { // POST
 
 const obtenerProyecto = async (req, res) => { // GET
     const { id } = req.params // acceder al routing dinamico
-    const proyecto = await Proyecto.findById(id).populate('tareas').populate('colaboradores', 'nombre email');
+    const proyecto = await Proyecto.findById(id).populate({ path: 'tareas', populate: { path: 'completado', select: 'nombre' } })
+        .populate('colaboradores', 'nombre email');
 
     if( !proyecto ){
         const error = new Error("No Encontrado")
