@@ -1,19 +1,19 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import AuthLayout from "./layouts/AuthLayout";
-import Login from './paginas/Login';
-import Registrar from './paginas/Registrar';
-import OlvidePassword from './paginas/OlvidePassword';
-import NuevoPassword from './paginas/NuevoPassword';
-import ConfirmarCuenta from './paginas/ConfirmarCuenta';
+import Login from './pages/Login';
+import Registrar from './pages/Registrar';
+import OlvidePassword from './pages/OlvidePassword';
+import NuevoPassword from './pages/NuevoPassword';
+import ConfirmarCuenta from './pages/ConfirmarCuenta';
 import { AuthProvider } from "./context/AuthProvider";
 import { ProyectosProvider } from "./context/ProyectosProvider";
-import Proyectos from "./paginas/Proyectos";
+import Proyectos from "./pages/Proyectos";
 import RutaProtegida from "./layouts/RutaProtegida";
-import NuevoProyecto from "./paginas/NuevoProyecto";
-import Proyecto from "./paginas/Proyecto";
-import EditarProyecto from "./paginas/EditarProyecto";
-import NuevoColaborador from "./paginas/NuevoColaborador";
+import NuevoProyecto from "./pages/NuevoProyecto";
+import Proyecto from "./pages/Proyecto";
+import EditarProyecto from "./pages/EditarProyecto";
+import NuevoColaborador from "./pages/NuevoColaborador";
 
 function App() {
   return(
