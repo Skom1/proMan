@@ -2,7 +2,7 @@ import { useState, useEffect, createContext } from "react";
 import { useNavigate } from "react-router-dom";
 import React from 'react';
 import axios from "axios";
-import error from "../components/Error.jsx";
+import useAuth from "../hooks/useAuth.jsx";
 
 
 const ProyectosContext = createContext();
@@ -21,6 +21,8 @@ const ProyectosProvider = ({children}) => {
 
 
     const navigate = useNavigate();
+
+    const { auth } = useAuth()
 
     useEffect(() => {
         const obtenerProyectos = async () => {
@@ -42,7 +44,7 @@ const ProyectosProvider = ({children}) => {
             }
         }
         obtenerProyectos()
-    }, [])
+    }, [auth])
 
     const mostrarAlerta = alerta => {
         setAlerta(alerta)
@@ -417,6 +419,13 @@ const ProyectosProvider = ({children}) => {
 
     const handleBuscador = () => {
         setBuscador(!buscador)
+    }
+
+    const cerrarSesionProyectos = () => {
+        setProyectos([])
+        setProyecto({})
+        setAlerta({})
+
     }
 
     return(

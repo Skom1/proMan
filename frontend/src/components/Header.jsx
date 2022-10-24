@@ -2,10 +2,18 @@ import React, { useState } from 'react';
 import useProyectos from "../hooks/useProyectos";
 import { Link } from 'react-router-dom'
 import Busqueda from "./Busqueda";
+import useAuth from "../hooks/useAuth";
 
 const Header = () => {
 
-    const { handleBuscador } = useProyectos()
+    const { handleBuscador, cerrarSesionProyectos } = useProyectos()
+    const { cerrarSesionAuth } = useAuth()
+
+    const handleCerrarSesion = () => {
+        cerrarSesionAuth()
+        cerrarSesionProyectos()
+        localStorage.removeItem('token')
+    }
 
     return (
         <header className={'px-4 py-5 bg-white border-b'}>
@@ -13,7 +21,7 @@ const Header = () => {
                 <Link
                     to={'/proyectos'}
                     className={'text-4xl text-sky-600 font-black text-center mb-5 md:mb-0'}>
-                    ProjectManagement
+                    ProMan
                 </Link>
                 <div className={'flex flex-col md:flex-row items-center gap-4'}>
                     <button
@@ -24,6 +32,7 @@ const Header = () => {
                     <button
                         type={'button'}
                         className={'text-white text-sm bg-sky-600 p-3 rounded-md uppercase font-bold'}
+                        onClick={handleCerrarSesion}
                     >
                         Cerrar Sesion
                     </button>
