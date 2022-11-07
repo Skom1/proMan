@@ -454,7 +454,8 @@ const ProyectosProvider = ({children}) => {
                 eliminarColaborador,
                 completarTarea,
                 buscador,
-                handleBuscador
+                handleBuscador,
+                cerrarSesionProyectos
             }}
         >
             {children}
