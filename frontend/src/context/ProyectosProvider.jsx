@@ -98,7 +98,7 @@ const ProyectosProvider = ({children}) => {
         }
     }
 
-    const nuevoProyecto = async  proyecto => {
+    const nuevoProyecto = async proyecto => {
         try{
             const token = localStorage.getItem('token')
             if(!token) return

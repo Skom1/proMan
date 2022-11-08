@@ -10,6 +10,7 @@ const FormularioProyecto = () => {
     const [descripcion, setDescripcion] = useState('');
     const [fechaEntrega, setFechaEntrega] = useState('');
     const [cliente, setCliente] = useState('');
+
     const params = useParams()
     const { mostrarAlerta, alerta, submitProyecto, proyecto } = useProyectos();
 

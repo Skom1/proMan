@@ -22,7 +22,7 @@ const RutaProtegida = () => {
                         </main>
                     </div>
                 </div>
-            ) : <Navigate to={'/'}/>}
+            ) : <Navigate to='/'/>}
         </>
     );
 };

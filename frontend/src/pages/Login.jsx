@@ -45,7 +45,7 @@ const Login = () => {
 
     return (
         <>
-            <h1 className={'text-sky-600 font-black text-6xl capitalize text-center'}>
+            <h1 className={'text-sky-600 font-black text-6xl capitalize text-center mt-10'}>
                 Inicia Sesion
             </h1>
 

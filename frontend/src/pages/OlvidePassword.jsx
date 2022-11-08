@@ -17,7 +17,7 @@ const OlvidePassword = () => {
                 error: true
             });
             return
-        } 
+        }
 
         try {
             const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/usuarios/forgot-password`, { email })
@@ -41,8 +41,7 @@ const OlvidePassword = () => {
 
     return (
         <>
-            <h1 className="text-sky-600 font-black text-5xl capitalize text-center">Recupera tu acceso y no pierdas tus {''}
-                <span className="text-slate-700">proyectos</span>
+            <h1 className="text-sky-600 font-black text-6xl capitalize text-center mt-10">Recupera tu Contraseña
             </h1>
 
             { msg && <Error alerta={alerta} />}

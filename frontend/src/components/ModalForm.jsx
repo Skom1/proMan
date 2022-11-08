@@ -23,7 +23,7 @@ const ModalFormularioTarea = () => {
             setId(tarea._id)
             setNombre(tarea.nombre)
             setDescripcion(tarea.descripcion)
-            setFechaEntrega(tarea.fecha?.split('T')[0])
+            setFechaEntrega(tarea.fechaEntrega.split('T')[0])
             setPrioridad(tarea.prioridad)
             return
         } else{

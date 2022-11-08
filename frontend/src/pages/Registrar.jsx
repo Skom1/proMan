@@ -33,7 +33,7 @@ const Registrar = () => {
 
         if(password.length < 8){
             setError({
-                msg: 'Debe Contener Minimo 8 Caracteres',
+                msg: 'La Contraseña Debe Contener Minimo 8 Caracteres',
                 error: true
             })
             return
@@ -67,7 +67,7 @@ const Registrar = () => {
 
     return (
         <>
-            <h1 className={'text-sky-600 font-black text-6xl capitalize text-center'}>
+            <h1 className={'text-sky-600 font-black text-6xl capitalize text-center mt-6'}>
                 Registrarse
             </h1>
 
@@ -129,10 +129,12 @@ const Registrar = () => {
             </form>
 
             <nav className={'lg:flex lg:justify-between'}>
-                <Link
-                    className={'block text-center text-slate-500 uppercase text-sm'}
-                    to={'/'}
-                >Ya tienes una cuenta? <span className={'text-sky-600'}>Inicia Sesion</span></Link>
+                <p className={'block text-center text-slate-500 uppercase text-sm'}>
+                    Ya tienes una cuenta?
+                    <Link to={'/'}  className={'text-sky-600'}>
+                        <span> Inicia Sesion</span>
+                    </Link>
+                </p>
                 <Link
                     className={'block text-center text-slate-500 uppercase text-sm'}
                     to={'/olvide-password'}
