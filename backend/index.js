@@ -20,7 +20,7 @@ const corsOptions = {
         if(whitelist.includes(origin)){
             // Consulta API
             callback(null, true);
-        } else{
+        } else {
             // No esta permitido
             callback(new Error("Error de Cors"));
         }

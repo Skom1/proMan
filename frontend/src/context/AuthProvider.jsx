@@ -29,7 +29,6 @@ const AuthProvider = ({children}) => {
             try {
                 const data = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/usuarios/perfil`, config);
                 setAuth(data.data)
-                navigate('/proyectos')
             } catch (e) {
                 setAuth({})
             } finally {

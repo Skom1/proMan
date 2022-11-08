@@ -51,7 +51,7 @@ const ProyectosProvider = ({children}) => {
 
         setTimeout(() => {
             setAlerta({})
-        }, 5000);
+        }, 1000);
     }
 
     const submitProyecto = async proyecto => {
@@ -91,7 +91,7 @@ const ProyectosProvider = ({children}) => {
             setTimeout(() => {
                 setAlerta({})
                 navigate('/proyectos')
-            }, 2000)
+            }, 1000)
 
         } catch (e) {
             console.log(e)
@@ -119,7 +119,7 @@ const ProyectosProvider = ({children}) => {
             setTimeout(() => {
                 setAlerta({})
                 navigate('/proyectos')
-            }, 2000)
+            }, 1000)
         } catch (e) {
             console.log(e)
         }
@@ -178,7 +178,7 @@ const ProyectosProvider = ({children}) => {
             setTimeout(()=> {
                 setAlerta({})
                 navigate('/proyectos')
-            }, 2000)
+            }, 1000)
         } catch (e) {
             console.log(e)
         }
@@ -384,7 +384,7 @@ const ProyectosProvider = ({children}) => {
 
             setTimeout(() => {
                 setAlerta({})
-            }, 3000);
+            }, 1000);
 
         } catch (e) {
             console.log(e)

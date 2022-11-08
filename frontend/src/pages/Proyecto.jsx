@@ -24,7 +24,6 @@ const Proyecto = () => {
     const { msg } = alerta
 
     return (
-        msg && alerta.error ? <Error alerta={alerta}/> : (
         <>
             <div className={'flex justify-between'}>
                 <h1 className={'font-black text-4xl'}>{ nombre }</h1>
@@ -106,7 +105,6 @@ const Proyecto = () => {
             <ModalEliminar />
             <ModalEliminarColaborador />
         </>
-        )
     );
 };
 
